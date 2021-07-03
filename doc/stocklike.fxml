@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox prefHeight="443.0" prefWidth="769.0">
+        <ToolBar>
+            <Label text="query"/>
+            <TextField id="queryText" prefHeight="24.0" prefWidth="176.0"/>
+            <CheckBox id="newCheck" mnemonicParsing="false" text="new"/>
+            <CheckBox id="nowCheck" mnemonicParsing="false" text="now"/>
+        </ToolBar>
+        <BarChart id="barChart" prefHeight="402.0" prefWidth="1197.0">
+            <xAxis>
+                <CategoryAxis side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT"/>
+            </yAxis>
+        </BarChart>
+        <ToolBar prefHeight="40.0" prefWidth="200.0">
+            <Label text="bin width"/>
+            <TextField id="binWidth" prefHeight="24.0" prefWidth="72.0"/>
+            <Label text="x range"/>
+            <TextField id="xRangeMin" prefHeight="24.0" prefWidth="40.0"/>
+            <TextField id="xRangeMax" prefHeight="24.0" prefWidth="40.0"/>
+            <Label text="y range"/>
+            <TextField id="yRangeMin" prefHeight="24.0" prefWidth="40.0"/>
+            <TextField id="yRangeMax" prefHeight="24.0" prefWidth="40.0"/>
+        </ToolBar>
+    </VBox>
+</AnchorPane>
