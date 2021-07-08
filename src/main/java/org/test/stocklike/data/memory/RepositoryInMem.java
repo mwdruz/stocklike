@@ -1,4 +1,4 @@
-package org.test.stocklike.db.memory;
+package org.test.stocklike.data.memory;
 
 import org.springframework.stereotype.Repository;
 import org.test.stocklike.domain.boundary.gateway.GatewayOffers;

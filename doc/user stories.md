@@ -5,7 +5,7 @@ product" offers from auction sites.
 
 Story A:
 as a gui user I want to be able to enter product name
-and be presented with a price histogram of all
+and be presented with an offer histogram of all
 currently available offers.
 
 Story B:
