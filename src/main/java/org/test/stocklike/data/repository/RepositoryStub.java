@@ -48,9 +48,9 @@ public class RepositoryStub implements GatewayOffers {
         final Predicate<Offer> categoryFilter = offer -> categoryNames.contains(
                 offer.getOfferCategory().getName());
         final List<OfferPrice> matchingPrices = offers.stream()
-                                              .filter(offerFilter.and(categoryFilter))
-                                              .map(Offer::getOfferPrice)
-                                              .toList();
+                                                      .filter(offerFilter.and(categoryFilter))
+                                                      .map(Offer::getOfferPrice)
+                                                      .toList();
         if (matchingPrices.isEmpty()) return Left("query failed");
         else return Right(matchingPrices);
     }

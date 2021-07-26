@@ -26,7 +26,7 @@ public class StatisticsImpl implements Statistics {
         LogManager.getLogger().info("creating histogram");
         
         return new TreeMap<>(Map.of("a", 2.0,
-                          "b", 5.0,
-                          "c", 1.0));
+                                    "b", 5.0,
+                                    "c", 1.0));
     }
 }

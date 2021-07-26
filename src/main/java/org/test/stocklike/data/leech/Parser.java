@@ -49,16 +49,16 @@ public class Parser {
                                      .get("__listing_StoreState").asText();
         final var listing = mapper.readTree(listingStr);
         final ArrayNode elementsArray = (ArrayNode) listing.at("/items/elements");
-
+        
         elementsArray.iterator();
-        for (int i = 0; i< elementsArray.size(); i++) {
+        for (int i = 0; i < elementsArray.size(); i++) {
             String type = elementsArray.get(i).get("type").asText();
             System.out.println(type);
             if (type.equals("label")) {
                 elementsArray.remove(i);
             }
         }
-    
+        
         for (JsonNode element : elementsArray) {
             System.out.println(element);
         }

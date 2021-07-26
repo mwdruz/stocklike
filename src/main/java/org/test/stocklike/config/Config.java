@@ -1,6 +1,9 @@
 package org.test.stocklike.config;
 
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.test.stocklike.Loader;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.gui.LoaderJFX;
@@ -11,12 +14,14 @@ import org.test.stocklike.gui.StageManager;
 public class Config {
     @Profile("jfx")
     @Bean("loader")
-    public Loader loaderJFX() {
+    public Loader loaderJFX()
+    {
         return new LoaderJFX();
     }
-
+    
     @Bean("stageManager")
-    public StageManager stageManager() {
+    public StageManager stageManager()
+    {
         return new StageManager();
     }
     

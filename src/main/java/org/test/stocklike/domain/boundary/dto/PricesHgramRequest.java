@@ -69,7 +69,7 @@ public class PricesHgramRequest {
         }
     }
     
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() { return new Builder(); }
     
     public String getQuery()
     {

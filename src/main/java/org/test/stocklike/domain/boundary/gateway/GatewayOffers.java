@@ -10,17 +10,16 @@ import io.vavr.control.Either;
 public interface GatewayOffers {
     Either<String, List<OfferCategory>> findCategoriesForQuery(String query);
     
-    
     Either<String, List<OfferPrice>> findPricesInCategories(List<String> categoryNames,
                                                             String query,
                                                             boolean checkNow,
                                                             boolean checkNew,
                                                             double minPrice,
                                                             double maxPrice);
-
+    
     default Either<String, List<OfferPrice>> findPrices(String query, boolean checkNow,
-                                                               boolean checkNew, double minPrice,
-                                                               double maxPrice)
+                                                        boolean checkNew, double minPrice,
+                                                        double maxPrice)
     {
         return findPricesInCategories(List.of(), query, checkNow, checkNew, minPrice, maxPrice);
     }

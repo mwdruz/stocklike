@@ -30,5 +30,4 @@ public class StatesMan {
         LOGGER.info("Application state changed to: {}", currentState);
         this.currentState = currentState;
     }
-    
 }

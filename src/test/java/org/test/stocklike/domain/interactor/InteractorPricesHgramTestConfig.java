@@ -49,6 +49,5 @@ class InteractorPricesHgramTestConfig {
         return Map.of("1", 3.4, "2", 5.6);
     }
     
-    
     InteractorPricesHgramTestConfig() { }
 }

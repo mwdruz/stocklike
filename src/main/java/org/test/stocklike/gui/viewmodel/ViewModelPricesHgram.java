@@ -98,7 +98,7 @@ public final class ViewModelPricesHgram {
     {
         state.bindBidirectional(stateText.textProperty());
     }
-
+    
     public void bindMessageText(Text messageText)
     {
         message.bindBidirectional(messageText.textProperty());
@@ -113,7 +113,7 @@ public final class ViewModelPricesHgram {
     {
         return query.get();
     }
-
+    
     public ObservableList<String> getCategories()
     {
         return FXCollections.observableList(categories.get());
@@ -219,7 +219,7 @@ public final class ViewModelPricesHgram {
     {
         return FXCollections.observableSet(selectedCategories);
     }
-
+    
     public List<String> getSelectedCategoriesList()
     {
         return selectedCategories.stream().toList();
@@ -250,7 +250,7 @@ public final class ViewModelPricesHgram {
     {
         dataList.clear();
     }
-
+    
     public void resetMessage()
     {
         this.message.set("");
@@ -260,7 +260,7 @@ public final class ViewModelPricesHgram {
     {
         queryFieldEditable.set(false);
     }
-
+    
     public void thawQueryField()
     {
         queryFieldEditable.set(true);

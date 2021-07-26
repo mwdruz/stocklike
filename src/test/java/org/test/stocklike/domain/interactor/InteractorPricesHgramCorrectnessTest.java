@@ -2,7 +2,6 @@ package org.test.stocklike.domain.interactor;
 
 import static io.vavr.API.Left;
 import static io.vavr.API.Right;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -20,8 +19,6 @@ import org.test.stocklike.domain.boundary.response.ResponseBrokerOffersHgram;
 import org.test.stocklike.domain.entity.OfferCategory;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.domain.state.StatesMan;
-
-import io.vavr.control.Either;
 
 class InteractorPricesHgramCorrectnessTest {
     @Mock
@@ -155,10 +152,10 @@ class InteractorPricesHgramCorrectnessTest {
         statesMan.setCurrentState(State.WAIT_FOR_QUERY);
         when(gateway.findCategoriesForQuery(anyString())).thenReturn(
                 Left(config.errorMessage()));
-   
+        
         // when
         interactor.process(config.requestWithoutCategories());
-    
+        
         // then
         InOrder inOrder = inOrder(gateway, responseBroker);
         inOrder.verify(gateway).findCategoriesForQuery(anyString());
@@ -191,5 +188,5 @@ class InteractorPricesHgramCorrectnessTest {
                                            anyDouble(),
                                            anyDouble());
         inOrder.verify(responseBroker).accept(PricesHgramResponse.ofError(config.errorMessage()));
-   }
+    }
 }

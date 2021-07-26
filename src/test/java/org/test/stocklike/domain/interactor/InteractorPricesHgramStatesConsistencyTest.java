@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -19,8 +17,6 @@ import org.test.stocklike.data.math.StatisticsImpl;
 import org.test.stocklike.domain.boundary.dto.PricesHgramRequest;
 import org.test.stocklike.domain.boundary.gateway.GatewayOffers;
 import org.test.stocklike.domain.boundary.response.ResponseBrokerOffersHgram;
-import org.test.stocklike.domain.entity.OfferCategory;
-import org.test.stocklike.domain.entity.OfferPrice;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.domain.state.StatesMan;
 
