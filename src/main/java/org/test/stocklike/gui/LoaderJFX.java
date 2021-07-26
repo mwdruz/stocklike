@@ -14,9 +14,11 @@ public class LoaderJFX extends Application implements Loader {
 
     @Override
     public void start(Stage stage) {
-        final var view = (View) appCtx.getBean("mainView");
-        stage.setScene(view.getScene());
+        final var stageManager = (StageManager) appCtx.getBean("stageManager");
+        final var mainView = (View) appCtx.getBean("mainView");
+        stage.setScene(mainView.getScene());
         stage.show();
+        stageManager.init(stage);
     }
 
     @Override

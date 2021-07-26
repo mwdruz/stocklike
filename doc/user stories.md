@@ -3,15 +3,15 @@ as a gui user I want to be able to collect, process
 and visualize meaningful statistics of "well-defined
 product" offers from auction sites.
 
-Story A:
-as a gui user I want to be able to enter product name
-and be presented with an offer histogram of all
+(MVP) Story A:
+- as a gui user I want to be able to enter product name
+and be presented with an offer price histogram of all
 currently available offers.
 
 Story B:
-as a gui user I want to be able to define queries
-that will be monitored as time passes 
+- as a gui user I want to be able to define queries
+that will be monitored at time intervals 
 
 Story C:
-as a gui user I want to see a plot of changes of some
+- as a gui user I want to see a plot of changes of some
 market statistics with time

@@ -16,4 +16,29 @@ public class Offer {
         this.offerPrice = offerPrice;
         this.offerCategory = offerCategory;
     }
+    
+    public int getOfferId()
+    {
+        return offerId;
+    }
+    
+    public String getUrl()
+    {
+        return url;
+    }
+    
+    public String getTitle()
+    {
+        return title;
+    }
+    
+    public OfferPrice getOfferPrice()
+    {
+        return offerPrice;
+    }
+    
+    public OfferCategory getOfferCategory()
+    {
+        return offerCategory;
+    }
 }

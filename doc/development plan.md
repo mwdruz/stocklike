@@ -10,15 +10,19 @@
           tested by behavior.
 
    2. The backbone of the application is its state. The state
-             determines which view is loaded by ui and what kind of
-             interaction can be fired by ui
+      determines which view is loaded by ui and what kind of
+      interaction can be fired by ui
 
    3. SHOULD THE STATE BE STORED BY UI OR DOMAIN LAYER??? 
-      Ideally, interactors should know what's next state change.
+      Ideally, only interactors need to know what's next state change.
+
+2. Statistics:
+   1. [ ] Creating histogram
 
 1. Explore possible domain by parsing web page.
-   1. Load all offers from all result pages
-   2. Clean up results: deal with useless items
-   3. Clean up results: deal order of promoted offers
+   1. [ ] Load all offers from all result pages
+   2. [ ] Clean up results: deal with useless items
+   3. [ ] Clean up results: deal order of promoted offers
 
-2. Where is an entry point for data loaded from web?
+3. Q: Where is an entry point for data loaded from web?
+   A: Loading data from web will be triggered by new search query.
