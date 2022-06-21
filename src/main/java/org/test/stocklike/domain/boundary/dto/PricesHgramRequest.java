@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PricesHgramRequest {
-    private String query;
+    private WebQuery query;
     private List<String> categories;
-    private boolean checkNow;
-    private boolean checkNew;
     private double xRangeMin;
     private double xRangeMax;
     private double binWidth;
@@ -26,27 +24,15 @@ public class PricesHgramRequest {
             return object;
         }
         
-        public Builder setQuery(String str)
+        public Builder setQuery(WebQuery query)
         {
-            object.query = str;
+            object.query = query;
             return this;
         }
         
         public Builder setCategories(List<String> categories)
         {
             object.categories.addAll(categories);
-            return this;
-        }
-        
-        public Builder setCheckNow(Boolean check)
-        {
-            object.checkNow = check;
-            return this;
-        }
-        
-        public Builder setCheckNew(Boolean check)
-        {
-            object.checkNew = check;
             return this;
         }
         
@@ -71,7 +57,7 @@ public class PricesHgramRequest {
     
     public static Builder builder() { return new Builder(); }
     
-    public String getQuery()
+    public WebQuery getQuery()
     {
         return query;
     }
@@ -79,16 +65,6 @@ public class PricesHgramRequest {
     public List<String> getCategories()
     {
         return new ArrayList<>(categories);
-    }
-    
-    public boolean isCheckNow()
-    {
-        return checkNow;
-    }
-    
-    public boolean isCheckNew()
-    {
-        return checkNew;
     }
     
     public double getXRangeMin()
@@ -112,8 +88,6 @@ public class PricesHgramRequest {
         return "PricesHgramRequest(" +
                "query='" + query + '\'' +
                ", categories=" + categories +
-               ", now=" + checkNow +
-               ", new=" + checkNew +
                ", xMin=" + xRangeMin +
                ", xMax=" + xRangeMax +
                ", bin=" + binWidth +

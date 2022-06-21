@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.test</groupId>
@@ -10,27 +11,30 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
 
         <!-- dependencies -->
-        <javafx.version>16</javafx.version>
+        <javafx.version>18.0.1</javafx.version>
 
-        <spring.version>5.3.8</spring.version>
-        <jsoup.version>1.13.1</jsoup.version>
-        <jackson.version>2.12.3</jackson.version>
+        <spring.version>5.3.20</spring.version>
+        <jsoup.version>1.15.1</jsoup.version>
+        <jackson.version>2.13.3</jackson.version>
 
-        <log4j.version>2.14.1</log4j.version>
-        <junit.version>5.7.2</junit.version>
-        <mockito.version>3.11.2</mockito.version>
+        <log4j.version>2.17.2</log4j.version>
+        <junit.version>5.8.2</junit.version>
+        <mockito.version>4.6.1</mockito.version>
+        <commons-compress.version>1.21</commons-compress.version>
 
-        <vavr.version>0.10.3</vavr.version>
+        <vavr.version>0.10.4</vavr.version>
+        <okhttp3.version>5.0.0-alpha.8</okhttp3.version>
+        <okio.version>3.1.0</okio.version>
 
-        <!-- plugins -->
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
-        <shade-plugin.version>3.2.4</shade-plugin.version>
-        <jar-plugin.version>3.2.0</jar-plugin.version>
+        <!-- maven plugins -->
+        <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+        <failsafe-plugin.version>3.0.0-M7</failsafe-plugin.version>
+        <shade-plugin.version>3.3.0</shade-plugin.version>
+        <jar-plugin.version>3.2.2</jar-plugin.version>
         <exec-plugin.version>3.0.0</exec-plugin.version>
 
         <!-- project paths -->
@@ -70,6 +74,11 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
 
 
         <!-- javaFX -->
@@ -94,6 +103,31 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp-urlconnection</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>${okhttp3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+            <version>${okio.version}</version>
         </dependency>
 
         <!-- other -->
@@ -167,6 +201,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>18</source>
+                    <target>18</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

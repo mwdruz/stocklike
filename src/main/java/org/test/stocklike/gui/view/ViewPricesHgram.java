@@ -38,10 +38,7 @@ public class ViewPricesHgram implements View {
     private final Text messageText;
     private final VBox categoriesVBox;
     
-    public Scene getScene()
-    {
-        return scene;
-    }
+    public Scene getScene() { return scene; }
     
     public ViewPricesHgram(ViewModelPricesHgram model, ControllerPricesHgram controller)
     {

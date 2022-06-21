@@ -1,6 +1,10 @@
 package org.test.stocklike.domain.boundary.dto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import org.test.stocklike.domain.entity.Hgram;
 
 public class PricesHgramResponse {
     public enum PricesHgramResponseType {ERROR, CATEGORIES, HGRAM}
@@ -8,7 +12,7 @@ public class PricesHgramResponse {
     private final PricesHgramResponseType type;
     private String message;
     private final List<String> categories = new ArrayList<>();
-    private final Map<String, Double> hgram = new TreeMap<>();
+    private Hgram hgram;
     
     private PricesHgramResponse(List<String> categories)
     {
@@ -22,10 +26,10 @@ public class PricesHgramResponse {
         this.message = errorMessage;
     }
     
-    public PricesHgramResponse(Map<String, Double> hgram)
+    public PricesHgramResponse(Hgram hgram)
     {
         type = PricesHgramResponseType.HGRAM;
-        this.hgram.putAll(hgram);
+        this.hgram = hgram;
     }
     
     public static PricesHgramResponse ofCategories(List<String> categoryNames)
@@ -38,7 +42,7 @@ public class PricesHgramResponse {
         return new PricesHgramResponse(message);
     }
     
-    public static PricesHgramResponse ofHgram(Map<String, Double> hgram)
+    public static PricesHgramResponse ofHgram(Hgram hgram)
     {
         return new PricesHgramResponse(hgram);
     }
@@ -75,9 +79,9 @@ public class PricesHgramResponse {
         return new ArrayList<>(categories);
     }
     
-    public Map<String, Double> getHgram()
+    public Hgram getHgram()
     {
-        return new TreeMap<>(hgram);
+        return hgram;
     }
     
     @Override

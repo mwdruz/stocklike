@@ -14,17 +14,11 @@ import org.test.stocklike.gui.StageManager;
 public class Config {
     @Profile("jfx")
     @Bean("loader")
-    public Loader loaderJFX()
-    {
-        return new LoaderJFX();
-    }
+    public Loader loaderJFX() { return new LoaderJFX(); }
     
     @Bean("stageManager")
-    public StageManager stageManager()
-    {
-        return new StageManager();
-    }
+    public StageManager stageManager() { return new StageManager(); }
     
     @Bean("initialState")
-    public State initialState() { return State.WAIT_FOR_QUERY; }
+    public State initialState() { return State.WAIT_FOR_REQUEST; }
 }

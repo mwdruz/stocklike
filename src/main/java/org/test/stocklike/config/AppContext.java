@@ -8,13 +8,7 @@ public class AppContext {
     
     private AppContext() { }
     
-    public static AnnotationConfigApplicationContext getContext()
-    {
-        return CTX;
-    }
+    public static AnnotationConfigApplicationContext getContext() { return CTX; }
     
-    public static Object getBean(String name)
-    {
-        return CTX.getBean(name);
-    }
+    public static Object getBean(String name) { return CTX.getBean(name); }
 }

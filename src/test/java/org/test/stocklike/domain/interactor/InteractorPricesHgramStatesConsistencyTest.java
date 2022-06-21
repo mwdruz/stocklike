@@ -4,9 +4,11 @@ import static io.vavr.API.Left;
 import static io.vavr.API.Right;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -15,8 +17,11 @@ import org.mockito.MockitoAnnotations;
 import org.test.stocklike.data.math.Statistics;
 import org.test.stocklike.data.math.StatisticsImpl;
 import org.test.stocklike.domain.boundary.dto.PricesHgramRequest;
+import org.test.stocklike.domain.boundary.dto.WebQuery;
 import org.test.stocklike.domain.boundary.gateway.GatewayOffers;
 import org.test.stocklike.domain.boundary.response.ResponseBrokerOffersHgram;
+import org.test.stocklike.domain.entity.Hgram;
+import org.test.stocklike.domain.entity.Price;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.domain.state.StatesMan;
 
@@ -25,22 +30,32 @@ class InteractorPricesHgramStatesConsistencyTest {
     ResponseBrokerOffersHgram responseBroker;
     @Mock
     GatewayOffers gateway;
-    StatesMan statesMan;
     Statistics statistics;
+    StatesMan statesMan;
     InteractorPricesHgram interactor;
     InteractorPricesHgramTestConfig config;
+    private AutoCloseable openedMocks;
     
     @BeforeEach
-    void init()
+    void setUpMocks()
     {
-        MockitoAnnotations.openMocks(this);
+        openedMocks = MockitoAnnotations.openMocks(this);
+        statistics = new Statistics() {
+            @Override
+            public void loadData(List<Price> prices) { }
+            
+            @Override
+            public Hgram getHgram(double binWidth) { return Hgram.fromList(binWidth, List.of()); }
+        };
         statesMan = new StatesMan();
-        statistics = new StatisticsImpl();
         interactor = new InteractorPricesHgram(responseBroker, gateway, statesMan, statistics,
                                                State.INVALID_STATE);
         config = new InteractorPricesHgramTestConfig();
         statistics = new StatisticsImpl();
     }
+    
+    @AfterEach
+    void closeMocks() throws Exception { openedMocks.close(); }
     
     @Test()
     void interactWithInvalidStateThrowsException()
@@ -57,12 +72,10 @@ class InteractorPricesHgramStatesConsistencyTest {
     void queryCategoriesSingleLeadsToDisplay()
     {
         // given
-        statesMan.setCurrentState(State.WAIT_FOR_QUERY);
-        when(gateway.findCategoriesForQuery(anyString()))
+        statesMan.setCurrentState(State.WAIT_FOR_REQUEST);
+        when(gateway.findCategoriesForQuery(any(WebQuery.class)))
                 .thenReturn(Right(config.categoriesSingle()));
-        when(gateway.findPrices(anyString(),
-                                anyBoolean(),
-                                anyBoolean(),
+        when(gateway.findPrices(any(WebQuery.class),
                                 anyDouble(),
                                 anyDouble()))
                 .thenReturn(Right(config.pricesReturned()));
@@ -72,7 +85,7 @@ class InteractorPricesHgramStatesConsistencyTest {
         
         // then
         InOrder inOrder = inOrder(responseBroker);
-        inOrder.verify(responseBroker).adviseState(State.PROCESS_QUERY);
+        inOrder.verify(responseBroker).adviseState(State.PROCESS_REQUEST);
         inOrder.verify(responseBroker).adviseState(State.DISPLAY_HGRAM_AND_WAIT);
         assertEquals(State.DISPLAY_HGRAM_AND_WAIT, statesMan.getCurrentState());
     }
@@ -81,8 +94,8 @@ class InteractorPricesHgramStatesConsistencyTest {
     void queryCategoriesManyLeadsToRefine()
     {
         // given
-        statesMan.setCurrentState(State.WAIT_FOR_QUERY);
-        when(gateway.findCategoriesForQuery(anyString()))
+        statesMan.setCurrentState(State.WAIT_FOR_REQUEST);
+        when(gateway.findCategoriesForQuery(any(WebQuery.class)))
                 .thenReturn(Right(config.categoriesMany()));
         
         // when
@@ -90,8 +103,8 @@ class InteractorPricesHgramStatesConsistencyTest {
         
         // then
         InOrder inOrder = inOrder(responseBroker);
-        inOrder(responseBroker).verify(responseBroker).adviseState(State.WAIT_FOR_CATEGORIES);
-        inOrder(responseBroker).verify(responseBroker).adviseState(State.PROCESS_QUERY);
+        inOrder.verify(responseBroker).adviseState(State.PROCESS_REQUEST);
+        inOrder.verify(responseBroker).adviseState(State.WAIT_FOR_CATEGORIES);
         assertEquals(State.WAIT_FOR_CATEGORIES, statesMan.getCurrentState());
     }
     
@@ -99,15 +112,16 @@ class InteractorPricesHgramStatesConsistencyTest {
     void queryFailedCategoriesLeadsToError()
     {
         // given
-        statesMan.setCurrentState(State.WAIT_FOR_QUERY);
-        when(gateway.findCategoriesForQuery(anyString())).thenReturn(Left(config.errorMessage()));
+        statesMan.setCurrentState(State.WAIT_FOR_REQUEST);
+        when(gateway.findCategoriesForQuery(any(WebQuery.class))).thenReturn(
+                Left(config.errorMessage()));
         
         // when
         interactor.process(config.requestWithoutCategories());
         
         // then
         InOrder inOrder = inOrder(responseBroker);
-        inOrder.verify(responseBroker).adviseState(State.PROCESS_QUERY);
+        inOrder.verify(responseBroker).adviseState(State.PROCESS_REQUEST);
         inOrder.verify(responseBroker).adviseState(State.DISPLAY_ERROR_AND_WAIT);
         assertEquals(State.DISPLAY_ERROR_AND_WAIT, statesMan.getCurrentState());
     }
@@ -116,12 +130,10 @@ class InteractorPricesHgramStatesConsistencyTest {
     void queryFailedQueryLeadsToError()
     {
         // given
-        statesMan.setCurrentState(State.WAIT_FOR_QUERY);
-        when(gateway.findCategoriesForQuery(anyString()))
+        statesMan.setCurrentState(State.WAIT_FOR_REQUEST);
+        when(gateway.findCategoriesForQuery(any(WebQuery.class)))
                 .thenReturn(Right(config.categoriesSingle()));
-        when(gateway.findPrices(anyString(),
-                                anyBoolean(),
-                                anyBoolean(),
+        when(gateway.findPrices(any(WebQuery.class),
                                 anyDouble(),
                                 anyDouble()))
                 .thenReturn(Left(config.errorMessage()));
@@ -131,7 +143,7 @@ class InteractorPricesHgramStatesConsistencyTest {
         
         // then
         InOrder inOrder = inOrder(responseBroker);
-        inOrder.verify(responseBroker).adviseState(State.PROCESS_QUERY);
+        inOrder.verify(responseBroker).adviseState(State.PROCESS_REQUEST);
         inOrder.verify(responseBroker).adviseState(State.DISPLAY_ERROR_AND_WAIT);
         assertEquals(State.DISPLAY_ERROR_AND_WAIT, statesMan.getCurrentState());
     }
@@ -141,12 +153,10 @@ class InteractorPricesHgramStatesConsistencyTest {
     {
         // given
         statesMan.setCurrentState(State.WAIT_FOR_CATEGORIES);
-        when(gateway.findPricesInCategories(anyList(),
-                                            anyString(),
-                                            anyBoolean(),
-                                            anyBoolean(),
-                                            anyDouble(),
-                                            anyDouble()))
+        when(gateway.findPricesWithCatFilter(any(),
+                                             any(WebQuery.class),
+                                             anyDouble(),
+                                             anyDouble()))
                 .thenReturn(Right(config.pricesReturned()));
         
         // when

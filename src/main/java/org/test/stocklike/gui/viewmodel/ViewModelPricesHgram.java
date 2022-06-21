@@ -109,95 +109,47 @@ public final class ViewModelPricesHgram {
         categories.bindBidirectional(categoryListView.itemsProperty());
     }
     
-    public String getQuery()
-    {
-        return query.get();
-    }
+    public String getQuery() { return query.get(); }
     
     public ObservableList<String> getCategories()
     {
         return FXCollections.observableList(categories.get());
     }
     
-    public boolean isCheckNew()
-    {
-        return checkNew.get();
-    }
+    public boolean isCheckNew() { return checkNew.get(); }
     
-    public boolean isCheckNow()
-    {
-        return checkNow.get();
-    }
+    public boolean isCheckNow() { return checkNow.get(); }
     
-    public double getXRangeMin()
-    {
-        return xRangeMin.get();
-    }
+    public double getXRangeMin() { return xRangeMin.get(); }
     
-    public double getXRangeMax()
-    {
-        return xRangeMax.get();
-    }
+    public double getXRangeMax() { return xRangeMax.get(); }
     
-    public double getYRangeMin()
-    {
-        return yRangeMin.get();
-    }
+    public double getYRangeMin() { return yRangeMin.get(); }
     
-    public double getYRangeMax()
-    {
-        return yRangeMax.get();
-    }
+    public double getYRangeMax() { return yRangeMax.get(); }
     
-    public double getBinWidth()
-    {
-        return binWidth.get();
-    }
+    public double getBinWidth() { return binWidth.get(); }
     
     public ObservableList<XYChart.Series<String, Number>> getDataList()
     {
         return FXCollections.observableList(dataList.get());
     }
     
-    public void setQuery(String query)
-    {
-        this.query.set(query);
-    }
+    public void setQuery(String query) { this.query.set(query); }
     
-    public void setCheckNew(boolean checkNew)
-    {
-        this.checkNew.set(checkNew);
-    }
+    public void setCheckNew(boolean checkNew) { this.checkNew.set(checkNew); }
     
-    public void setCheckNow(boolean checkNow)
-    {
-        this.checkNow.set(checkNow);
-    }
+    public void setCheckNow(boolean checkNow) { this.checkNow.set(checkNow); }
     
-    public void setXRangeMin(double xRangeMin)
-    {
-        this.xRangeMin.set(xRangeMin);
-    }
+    public void setXRangeMin(double xRangeMin) { this.xRangeMin.set(xRangeMin); }
     
-    public void setXRangeMax(double xRangeMax)
-    {
-        this.xRangeMax.set(xRangeMax);
-    }
+    public void setXRangeMax(double xRangeMax) { this.xRangeMax.set(xRangeMax); }
     
-    public void setYRangeMin(double yRangeMin)
-    {
-        this.yRangeMin.set(yRangeMin);
-    }
+    public void setYRangeMin(double yRangeMin) { this.yRangeMin.set(yRangeMin); }
     
-    public void setYRangeMax(double yRangeMax)
-    {
-        this.yRangeMax.set(yRangeMax);
-    }
+    public void setYRangeMax(double yRangeMax) { this.yRangeMax.set(yRangeMax); }
     
-    public void setBinWidth(double binWidth)
-    {
-        this.binWidth.set(binWidth);
-    }
+    public void setBinWidth(double binWidth) { this.binWidth.set(binWidth); }
     
     public void setDataList(ObservableList<XYChart.Series<String, Number>> dataList)
     {
@@ -205,15 +157,9 @@ public final class ViewModelPricesHgram {
         this.dataList.addAll(dataList);
     }
     
-    public void setState(String state)
-    {
-        this.state.set(state);
-    }
+    public void setState(String state) { this.state.set(state); }
     
-    public void setMessage(String message)
-    {
-        this.message.set(message);
-    }
+    public void setMessage(String message) { this.message.set(message); }
     
     public ObservableSet<String> getSelectedCategories()
     {
@@ -230,15 +176,9 @@ public final class ViewModelPricesHgram {
         areCategoriesVisible.bindBidirectional(categoriesVBox.visibleProperty());
     }
     
-    public void setCategoriesVisible(boolean value)
-    {
-        this.areCategoriesVisible.set(value);
-    }
+    public void setCategoriesVisible(boolean value) { this.areCategoriesVisible.set(value); }
     
-    public boolean areCategoriesVisible()
-    {
-        return areCategoriesVisible.get();
-    }
+    public boolean areCategoriesVisible() { return areCategoriesVisible.get(); }
     
     public void resetCategories()
     {
@@ -246,25 +186,13 @@ public final class ViewModelPricesHgram {
         selectedCategories.clear();
     }
     
-    public void resetDataList()
-    {
-        dataList.clear();
-    }
+    public void resetDataList() { dataList.clear(); }
     
-    public void resetMessage()
-    {
-        this.message.set("");
-    }
+    public void resetMessage() { this.message.set(""); }
     
-    public void freezeQueryField()
-    {
-        queryFieldEditable.set(false);
-    }
+    public void freezeQueryField() { queryFieldEditable.set(false); }
     
-    public void thawQueryField()
-    {
-        queryFieldEditable.set(true);
-    }
+    public void thawQueryField() { queryFieldEditable.set(true); }
     
     public void bindQueryReadOnly(TextField queryText)
     {

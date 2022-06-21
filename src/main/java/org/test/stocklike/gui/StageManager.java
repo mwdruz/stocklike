@@ -10,19 +10,12 @@ import javafx.stage.Stage;
 
 @Component
 public class StageManager {
-    
     private final List<Stage> stages = new ArrayList<>();
     private int currIndex = -1;
     
-    public Scene getScene()
-    {
-        return currentStage().getScene();
-    }
+    public Scene getScene() { return currentStage().getScene(); }
     
-    private Stage currentStage()
-    {
-        return stages.get(currIndex);
-    }
+    private Stage currentStage() { return stages.get(currIndex); }
     
     public void init(Stage stage)
     {

@@ -1,7 +1,6 @@
 package org.test.stocklike.domain.interactor;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +11,9 @@ import org.test.stocklike.domain.boundary.dto.PricesHgramResponse;
 import org.test.stocklike.domain.boundary.gateway.GatewayOffers;
 import org.test.stocklike.domain.boundary.request.PricesHgramRequestBroker;
 import org.test.stocklike.domain.boundary.response.ResponseBrokerOffersHgram;
-import org.test.stocklike.domain.entity.OfferCategory;
-import org.test.stocklike.domain.entity.OfferPrice;
+import org.test.stocklike.domain.entity.Category;
+import org.test.stocklike.domain.entity.Hgram;
+import org.test.stocklike.domain.entity.Price;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.domain.state.StatesMan;
 
@@ -44,84 +44,80 @@ public class InteractorPricesHgram implements PricesHgramRequestBroker {
     public void process(PricesHgramRequest request)
     {
         switch (statesMan.getCurrentState()) {
-            case WAIT_FOR_QUERY,
+            case WAIT_FOR_REQUEST,
                     DISPLAY_ERROR_AND_WAIT,
-                    DISPLAY_HGRAM_AND_WAIT -> processQuery(request);
-            case WAIT_FOR_CATEGORIES -> processCategories(request);
-            case PROCESS_QUERY,
-                    PROCESS_CATEGORIES,
-                    PROCESS_PARAMS -> throw new UnsupportedOperationException(
-                    "processing of state {}" +
-                    statesMan.getCurrentState().toString());
+                    DISPLAY_HGRAM_AND_WAIT -> processRequest(request);
+            case WAIT_FOR_CATEGORIES -> processRequestRefineCategories(request);
+            case PROCESS_REQUEST,
+                    PROCESS_REFINED_CATEGORIES,
+                    PROCESS_REFINED_PARAMS -> throw new UnsupportedOperationException(
+                    "processing of state {}" + statesMan.getCurrentState().toString());
             case INVALID_STATE -> throw new IllegalStateException();
             default -> Platform.exit();
         }
     }
     
-    private void processQuery(PricesHgramRequest request)
+    private void processRequest(PricesHgramRequest request)
     {
-        final String query = request.getQuery();
-        LOGGER.info("process query: \"{}\"", query);
-        changeState(State.PROCESS_QUERY);
-        if (!request.getCategories().isEmpty())
-            processCategories(request);
-        else {
-            Either<String, List<OfferCategory>> maybeCategories =
-                    gateway.findCategoriesForQuery(query);
-            if (maybeCategories.isLeft())
-                respondWithError(maybeCategories.getLeft());
-            else
-                processQueryHandleCategories(request, maybeCategories.get());
-        }
+        LOGGER.info("process query: \"{}\"", request.getQuery());
+        changeStateTo(State.PROCESS_REQUEST);
+        if (request.getCategories().isEmpty()) processRequestWithoutCategories(request);
+        else processRequestRefineCategories(request);
     }
     
-    private void processQueryHandleCategories(PricesHgramRequest request,
-                                              List<OfferCategory> categories)
+    private void processRequestWithoutCategories(PricesHgramRequest request)
     {
-        if (categories.size() > 1)
-            respondWithCategories(categories);
-        else processQueryHandlePrices(
+        assert request.getCategories().isEmpty();
+        Either<String, List<Category>> maybeCategories =
+                gateway.findCategoriesForQuery(request.getQuery());
+        if (maybeCategories.isLeft())
+            respondWithError(maybeCategories.getLeft());
+        else
+            processRequestWithCategories(request, maybeCategories.get());
+    }
+    
+    private void processRequestWithCategories(PricesHgramRequest request,
+                                              List<Category> categories)
+    {
+        if (categories.size() > 1) respondWithCategories(categories);
+        else processPrices(
                 gateway.findPrices(request.getQuery(),
-                                   request.isCheckNow(),
-                                   request.isCheckNew(),
                                    request.getXRangeMin(),
                                    request.getXRangeMax()),
                 request.getBinWidth());
     }
     
-    private void processQueryHandlePrices(Either<String, List<OfferPrice>> maybePrices,
-                                          double binWidth)
+    private void processPrices(Either<String, List<Price>> maybePrices,
+                               double binWidth)
     {
-        if (maybePrices.isLeft())
-            respondWithError(maybePrices.getLeft());
+        if (maybePrices.isLeft()) respondWithError(maybePrices.getLeft());
         else respondWithHgram(maybePrices.get(), binWidth);
     }
     
-    private void processCategories(PricesHgramRequest request)
+    private void processRequestRefineCategories(PricesHgramRequest request)
     {
-        processQueryHandlePrices(gateway.findPricesInCategories(request.getCategories(),
-                                                                request.getQuery(),
-                                                                request.isCheckNow(),
-                                                                request.isCheckNew(),
-                                                                request.getXRangeMin(),
-                                                                request.getXRangeMax()),
-                                 request.getBinWidth());
+        processPrices(
+                gateway.findPricesWithCatFilter(request.getCategories()::contains,
+                                                request.getQuery(),
+                                                request.getXRangeMin(),
+                                                request.getXRangeMax()),
+                request.getBinWidth());
     }
     
-    private void respondWithHgram(List<OfferPrice> offerPrices, double binWidth)
+    private void respondWithHgram(List<Price> prices, double binWidth)
     {
         LOGGER.info("respond with histogram");
-        statistics.loadData(offerPrices);
-        Map<String, Double> hGram = statistics.getHgram(binWidth);
-        changeState(State.DISPLAY_HGRAM_AND_WAIT);
+        statistics.loadData(prices);
+        Hgram hGram = statistics.getHgram(binWidth);
+        changeStateTo(State.DISPLAY_HGRAM_AND_WAIT);
         responseBroker.accept(PricesHgramResponse.ofHgram(hGram));
     }
     
-    private void respondWithCategories(List<OfferCategory> categories)
+    private void respondWithCategories(List<Category> categories)
     {
-        changeState(State.WAIT_FOR_CATEGORIES);
+        changeStateTo(State.WAIT_FOR_CATEGORIES);
         List<String> categoryNames = categories.stream()
-                                               .map(OfferCategory::getName)
+                                               .map(Category::name)
                                                .toList();
         LOGGER.info("respond with categories: {}", categoryNames);
         responseBroker.accept(
@@ -130,14 +126,14 @@ public class InteractorPricesHgram implements PricesHgramRequestBroker {
     
     private void respondWithError(String message)
     {
-        changeState(State.DISPLAY_ERROR_AND_WAIT);
+        changeStateTo(State.DISPLAY_ERROR_AND_WAIT);
         LOGGER.info("respond with error: {}", message);
         responseBroker.accept(PricesHgramResponse.ofError(message));
     }
     
-    private void changeState(State toState)
+    private void changeStateTo(State state)
     {
-        statesMan.setCurrentState(toState);
-        responseBroker.adviseState(toState);
+        statesMan.setCurrentState(state);
+        responseBroker.adviseState(state);
     }
 }

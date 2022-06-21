@@ -3,6 +3,7 @@ package org.test.stocklike.gui.controller;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Component;
 import org.test.stocklike.domain.boundary.dto.PricesHgramRequest;
+import org.test.stocklike.domain.boundary.dto.WebQuery;
 import org.test.stocklike.domain.boundary.request.PricesHgramRequestBroker;
 import org.test.stocklike.gui.viewmodel.ViewModelPricesHgram;
 
@@ -26,12 +27,16 @@ public class ControllerPricesHgram {
     
     public void submitQuery()
     {
+        final WebQuery webQuery = WebQuery.builder()
+                                          .setQueryString(model.getQuery())
+                                          .setStateNew(model.isCheckNew())
+                                          .setTypeNow(model.isCheckNow())
+                                          .build();
+        
         final PricesHgramRequest request =
                 PricesHgramRequest.builder()
-                                  .setQuery(model.getQuery())
+                                  .setQuery(webQuery)
                                   .setCategories(model.getSelectedCategoriesList())
-                                  .setCheckNew(model.isCheckNew())
-                                  .setCheckNow(model.isCheckNow())
                                   .setXRangeMin(model.getXRangeMin())
                                   .setXRangeMax(model.getXRangeMax())
                                   .setBinWidth(model.getBinWidth())
@@ -46,7 +51,7 @@ public class ControllerPricesHgram {
         ObservableSet<String> selected = model.getSelectedCategories();
         BooleanProperty observable = new SimpleBooleanProperty();
         observable.addListener((obs, wasSelected, isSelected) -> {
-            if (isSelected) selected.add(item);
+            if (Boolean.TRUE.equals(isSelected)) selected.add(item);
             else selected.remove(item);
         });
         observable.set(selected.contains(item));

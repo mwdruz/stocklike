@@ -1,11 +1,14 @@
 package org.test.stocklike.domain.interactor;
 
+import static io.vavr.API.Tuple;
+
 import java.util.List;
-import java.util.Map;
 
 import org.test.stocklike.domain.boundary.dto.PricesHgramRequest;
-import org.test.stocklike.domain.entity.OfferCategory;
-import org.test.stocklike.domain.entity.OfferPrice;
+import org.test.stocklike.domain.boundary.dto.WebQuery;
+import org.test.stocklike.domain.entity.Category;
+import org.test.stocklike.domain.entity.Hgram;
+import org.test.stocklike.domain.entity.Price;
 
 class InteractorPricesHgramTestConfig {
     String errorMessage() { return "error message"; }
@@ -14,40 +17,36 @@ class InteractorPricesHgramTestConfig {
     
     String catName2() { return "category 2"; }
     
-    OfferCategory category1() { return new OfferCategory(List.of(1), catName1()); }
+    Category category1() { return new Category("1", "category1", 0, str -> "link1"); }
     
-    OfferCategory category2() { return new OfferCategory(List.of(2), catName2()); }
+    Category category2() { return new Category("2", "category2", 0, str -> "link2"); }
     
-    List<OfferCategory> categoriesSingle() { return List.of(category1()); }
+    List<Category> categoriesSingle() { return List.of(category1()); }
     
-    List<OfferCategory> categoriesMany() { return List.of(category1(), category2()); }
+    List<Category> categoriesMany() { return List.of(category1(), category2()); }
+    
+    private static final WebQuery WHATEVER_QUERY = WebQuery.builder()
+                                                           .setQueryString("whatever query")
+                                                           .build();
     
     PricesHgramRequest requestWithoutCategories()
     {
-        return
-                PricesHgramRequest.builder()
-                                  .setQuery("whatever query")
-                                  .build();
+        return PricesHgramRequest.builder()
+                                 .setQuery(WHATEVER_QUERY)
+                                 .build();
     }
     
     PricesHgramRequest requestWithCategories()
     {
-        return
-                PricesHgramRequest.builder()
-                                  .setQuery("whatever query")
-                                  .setCategories(List.of(catName1(), catName2()))
-                                  .build();
+        return PricesHgramRequest.builder()
+                                 .setQuery(WHATEVER_QUERY)
+                                 .setCategories(List.of(catName1(), catName2()))
+                                 .build();
     }
     
-    List<OfferPrice> pricesReturned()
-    {
-        return List.of(new OfferPrice(1), new OfferPrice(2), new OfferPrice(3));
-    }
+    List<Price> pricesReturned() { return List.of(new Price(1), new Price(2), new Price(3)); }
     
-    Map<String, Double> hgramReturned()
-    {
-        return Map.of("1", 3.4, "2", 5.6);
-    }
+    Hgram hgramReturned() { return Hgram.fromList(1.0, List.of(Tuple(1.0, 3), Tuple(2.0, 5))); }
     
     InteractorPricesHgramTestConfig() { }
 }

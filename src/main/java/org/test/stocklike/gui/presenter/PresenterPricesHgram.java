@@ -1,11 +1,11 @@
 package org.test.stocklike.gui.presenter;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Component;
 import org.test.stocklike.domain.boundary.dto.PricesHgramResponse;
 import org.test.stocklike.domain.boundary.response.ResponseBrokerOffersHgram;
+import org.test.stocklike.domain.entity.Hgram;
 import org.test.stocklike.domain.state.State;
 import org.test.stocklike.gui.viewmodel.ViewModelPricesHgram;
 
@@ -19,10 +19,7 @@ public class PresenterPricesHgram implements ResponseBrokerOffersHgram {
     public PresenterPricesHgram(ViewModelPricesHgram model) { this.model = model; }
     
     @Override
-    public void adviseState(State state)
-    {
-        model.setState(state.toString());
-    }
+    public void adviseState(State state) { model.setState(state.toString()); }
     
     @Override
     public void accept(PricesHgramResponse response)
@@ -43,12 +40,13 @@ public class PresenterPricesHgram implements ResponseBrokerOffersHgram {
         model.freezeQueryField();
     }
     
-    private void acceptHgram(Map<String, Double> hgram)
+    private void acceptHgram(Hgram hgram)
     {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         ObservableList<XYChart.Data<String, Number>> data = series.getData();
-        hgram.forEach((key, value) -> data.add(
-                new XYChart.Data<>(key, value)));
+        hgram.getLabeledList().forEach(tuple -> data.add(
+                new XYChart.Data<>(tuple._1, tuple._2)));
+        model.setBinWidth(hgram.getBinWidth());
         model.getDataList().clear();
         model.getDataList().add(series);
         model.thawQueryField();

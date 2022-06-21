@@ -1,12 +1,12 @@
 package org.test.stocklike.data.math;
 
 import java.util.List;
-import java.util.Map;
 
-import org.test.stocklike.domain.entity.OfferPrice;
+import org.test.stocklike.domain.entity.Hgram;
+import org.test.stocklike.domain.entity.Price;
 
 public interface Statistics {
-    void loadData(List<OfferPrice> offerPrices);
+    void loadData(List<Price> prices);
     
-    Map<String, Double> getHgram(double binWidth);
+    Hgram getHgram(double binWidth);
 }

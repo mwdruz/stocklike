@@ -1,26 +1,26 @@
 package org.test.stocklike.domain.boundary.gateway;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-import org.test.stocklike.domain.entity.OfferCategory;
-import org.test.stocklike.domain.entity.OfferPrice;
+import org.test.stocklike.domain.boundary.dto.WebQuery;
+import org.test.stocklike.domain.entity.Category;
+import org.test.stocklike.domain.entity.Price;
 
 import io.vavr.control.Either;
 
 public interface GatewayOffers {
-    Either<String, List<OfferCategory>> findCategoriesForQuery(String query);
+    Either<String, List<Category>> findCategoriesForQuery(WebQuery query);
     
-    Either<String, List<OfferPrice>> findPricesInCategories(List<String> categoryNames,
-                                                            String query,
-                                                            boolean checkNow,
-                                                            boolean checkNew,
-                                                            double minPrice,
-                                                            double maxPrice);
+    Either<String, List<Price>> findPricesWithCatFilter(Predicate<String> catNameFilter,
+                                                        WebQuery query,
+                                                        double minPrice,
+                                                        double maxPrice);
     
-    default Either<String, List<OfferPrice>> findPrices(String query, boolean checkNow,
-                                                        boolean checkNew, double minPrice,
-                                                        double maxPrice)
+    default Either<String, List<Price>> findPrices(WebQuery query,
+                                                   double minPrice,
+                                                   double maxPrice)
     {
-        return findPricesInCategories(List.of(), query, checkNow, checkNew, minPrice, maxPrice);
+        return findPricesWithCatFilter(cat -> true, query, minPrice, maxPrice);
     }
 }
