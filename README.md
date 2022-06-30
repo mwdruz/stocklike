@@ -1,4 +1,4 @@
-Stocklike, test Jira
+Stocklike, test Jira 2
 
 This application is supposed to allow monitoring changing prices of a product, and represent this as if that product was a stock share i.e. as a simple, hopefully meaningful plot.
 
